@@ -1,23 +1,11 @@
-# hexo-algoliasearch
-[![npm version](https://img.shields.io/npm/v/hexo-algoliasearch?style=flat-square)](https://www.npmjs.com/package/hexo-algoliasearch) 
-[![npm download/month](https://img.shields.io/npm/dm/hexo-algoliasearch.svg?style=flat-square)](https://www.npmjs.com/package/hexo-algoliasearch)
-[![code coverage](https://img.shields.io/codecov/c/github/LouisBarranqueiro/hexo-algoliasearch?style=flat-square
-)](https://app.codecov.io/gh/LouisBarranqueiro/hexo-algoliasearch/tree/main)
+# @reimujs/hexo-algoliasearch
 
 A plugin to index posts of your Hexo blog on Algolia
 
 ## Installation
 
 ```
-npm install hexo-algoliasearch --save
-```
-
-If Hexo detect automatically all plugins, that's all.
-
-If that is not the case, register the plugin in your `_config.yml` file :
-```yml
-plugins:
-  - hexo-algoliasearch
+npm install @reimujs/hexo-algoliasearch --save
 ```
 
 ## Configuration
