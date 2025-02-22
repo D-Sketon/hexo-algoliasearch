@@ -8,8 +8,8 @@
     "build": "babel src --out-dir lib --ignore **/*.spec.js",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "test": "npm run lint && jest",
-    "test:update": "npm run lint && jest -u",
+    "test": "jest",
+    "test:update": "jest -u",
     "test:watch": "npm run test -- --watch",
     "test:coverage": "npm test --  --coverage",
     "prepublish": "npm run build"
@@ -49,6 +49,9 @@
     "eslint": "8.53.0",
     "hexo": "6.3.0",
     "jest": "29.7.0"
+  },
+  "peerDependencies": {
+    "hexo-util": ">=2.0.0"
   },
   "engines": {
     "node": ">=18"

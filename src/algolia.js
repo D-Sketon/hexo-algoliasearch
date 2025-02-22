@@ -1,5 +1,6 @@
 import striptags from 'striptags'
 import algoliasearch from 'algoliasearch'
+import { full_url_for } from 'hexo-util'
 
 const FILTER_FUNCTIONS = {
   strip: striptags,
@@ -11,15 +12,26 @@ const FILTER_FUNCTIONS = {
 /**
  * Pick specified attributes of a given object
  *
+ * @param {Object} hexo - The hexo object
  * @param {Object} object - The object to pick the attribute from
  * @param {Array} attributes - The attributes to pick from the given object
  * @returns {Object}
  */
-export const pick = (object, attributes) => {
+export const pick = (hexo, object, attributes) => {
   const newObject = {}
   attributes.forEach((attribute) => {
-    if (object.hasOwnProperty(attribute)) {
-      newObject[attribute] = object[attribute]
+    if (attribute === 'permalink') {
+      let path = object.path
+      if (object.lang) {
+        path = `${object.lang}/${path}`
+      }
+      const permalink = full_url_for.call(hexo, path)
+      newObject[attribute] = permalink
+    }
+    else {
+      if (object.hasOwnProperty(attribute)) {
+        newObject[attribute] = object[attribute]
+      }
     }
   })
 
@@ -54,16 +66,17 @@ export const splitIntoChunks = (array, chunkSize) => {
 /**
  * Pick speficied fields of posts
  *
+ * @param {Object} hexo - The hexo object
  * @param {Object} posts - The posts to prepare
  * @param {Array} fields - The fields of the posts to select
  * @param {Array} fieldsWithFilters - The fields of the posts to select
  * @returns {Object} posts - The posts ready to be indexed
  */
-export const preparePosts = (posts, fields, fieldsWithFilters) => {
+export const preparePosts = (hexo, posts, fields, fieldsWithFilters) => {
   const tagsAndCategoriesFields = ['tags', 'categories'].filter((field) => fields.includes(field))
 
   return posts.map((initialPost) => {
-    const postToIndex = pick(initialPost, fields)
+    const postToIndex = pick(hexo, initialPost, fields)
     // define a unique ID to identfy this post on Algolia
     postToIndex.objectID = initialPost._id
 
@@ -142,7 +155,7 @@ const algoliaCommand = async(hexo, args, callback) => {
     hexo.log.info('There is no post to index.')
     return callback()
   }
-  posts = preparePosts(posts, fields, fieldsWithFilters)
+  posts = preparePosts(hexo, posts, fields, fieldsWithFilters)
 
   const chunkedPosts = splitIntoChunks(posts, algoliaChunkSize)
   const algoliaClient = algoliasearch(algoliaAppId, algoliaAdminApiKey)
